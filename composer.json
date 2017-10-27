@@ -1,5 +1,5 @@
 {
-    "name": "horde/horde-autoloader",
+    "name": "horde/autoloader",
     "description": "Horde Autoloader",
     "type": "library",
     "homepage": "https://pear.horde.org",
@@ -28,7 +28,7 @@
         "php": "^5.3 || ^7"
     },
     "suggest": {
-        "pear-pear.horde.org/Horde_Test": "^2.1@stable"
+        "pear-pear.horde.org/Horde_Test": "^2.1"
     },
     "replace": {
         "pear-pear.horde.org/Horde_Autoloader": "2.*",
