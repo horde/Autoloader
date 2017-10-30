@@ -17,7 +17,7 @@
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2016-02-01</date>
+ <date>2017-10-30</date>
  <version>
   <release>2.1.3</release>
   <api>2.1.0</api>
@@ -38,6 +38,7 @@
       <dir name="examples">
        <file name="most_basic.php" role="doc" />
       </dir> <!-- /doc/Horde/Autoloader/examples -->
+      <file name="CHANGES" role="doc" />
       <file name="COPYING" role="doc" />
      </dir> <!-- /doc/Horde/Autoloader -->
     </dir> <!-- /doc/Horde -->
@@ -98,6 +99,7 @@
  </dependencies>
  <phprelease>
   <filelist>
+   <install as="CHANGES" name="doc/Horde/Autoloader/CHANGES" />
    <install as="COPYING" name="doc/Horde/Autoloader/COPYING" />
    <install as="examples/most_basic.php" name="doc/Horde/Autoloader/examples/most_basic.php" />
    <install as="Horde/Autoloader.php" name="lib/Horde/Autoloader.php" />
@@ -308,7 +310,7 @@
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2016-02-01</date>
+   <date>2017-10-30</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
