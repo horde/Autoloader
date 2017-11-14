@@ -70,7 +70,6 @@
       <file name="AllTests.php" role="test" />
       <file name="AutoloaderTest.php" role="test" />
       <file name="bootstrap.php" role="test" />
-      <file name="phpunit.xml" role="test" />
      </dir> <!-- /test/Horde/Autoloader -->
     </dir> <!-- /test/Horde -->
    </dir> <!-- /test -->
@@ -112,7 +111,6 @@
    <install as="Horde/Autoloader/AllTests.php" name="test/Horde/Autoloader/AllTests.php" />
    <install as="Horde/Autoloader/AutoloaderTest.php" name="test/Horde/Autoloader/AutoloaderTest.php" />
    <install as="Horde/Autoloader/bootstrap.php" name="test/Horde/Autoloader/bootstrap.php" />
-   <install as="Horde/Autoloader/phpunit.xml" name="test/Horde/Autoloader/phpunit.xml" />
    <install as="Horde/Autoloader/ClassPathMapper/ApplicationTest.php" name="test/Horde/Autoloader/ClassPathMapper/ApplicationTest.php" />
    <install as="Horde/Autoloader/ClassPathMapper/DefaultTest.php" name="test/Horde/Autoloader/ClassPathMapper/DefaultTest.php" />
    <install as="Horde/Autoloader/ClassPathMapper/PrefixStringTest.php" name="test/Horde/Autoloader/ClassPathMapper/PrefixStringTest.php" />
