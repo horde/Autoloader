@@ -2,7 +2,7 @@
 id: Autoloader
 name: Autoloader
 full: Autoloader library
-description: Autoload implementation and class loading manager for Horde.
+description: An autoload implementation and class loading manager for Horde.
 list: dev
 type: library
 homepage: https://www.horde.org/libraries/Horde_Autoloader
