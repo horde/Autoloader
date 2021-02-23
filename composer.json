@@ -26,14 +26,10 @@
     ],
     "require": {
         "horde/horde-installer-plugin": "*",
-        "php": "^5.3 || ^7"
+        "php": "^7"
     },
     "suggest": {
-        "pear-pear.horde.org/Horde_Test": "^2.1"
-    },
-    "replace": {
-        "pear-pear.horde.org/horde_autoloader": "2.*",
-        "horde/test": "^2.1"
+        "horde/test": "^3"
     },
     "autoload": {
         "psr-0": {
