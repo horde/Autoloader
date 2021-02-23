@@ -1,42 +1,42 @@
 {
     "name": "horde/autoloader",
     "description": "Autoloader library",
-    "type": "library",
+    "type": "horde-library",
     "homepage": "https://www.horde.org/libraries/Horde_Autoloader",
     "license": "LGPL-2.1",
     "authors": [
         {
-            "name": "Chuck Hagenbuch",
-            "email": "chuck@horde.org",
-            "role": "lead"
-        },
-        {
             "name": "Jan Schneider",
             "email": "jan@horde.org",
             "role": "lead"
+        },
+        {
+            "name": "Chuck Hagenbuch",
+            "email": "chuck@horde.org",
+            "role": "lead"
         }
     ],
-    "version": "2.1.3",
-    "time": "2017-11-11",
+    "version": "3.0.0alpha1",
+    "time": "2021-02-23",
     "repositories": [
         {
-            "type": "pear",
-            "url": "https://pear.horde.org"
+            "type": "composer",
+            "url": "https://horde-satis.maintaina.com/"
         }
     ],
     "require": {
+        "horde/horde-installer-plugin": "*",
         "php": "^5.3 || ^7"
     },
     "suggest": {
-        "pear-pear.horde.org/Horde_Test": "^2.1"
-    },
-    "replace": {
-        "pear-pear.horde.org/Horde_Autoloader": "2.*",
-        "pear-horde/Horde_Autoloader": "2.*"
+        "horde/test": "^2.1"
     },
     "autoload": {
         "psr-0": {
             "Horde_Autoloader": "lib/"
+        },
+        "psr-4": {
+            "Horde\\Autoloader\\": "src/"
         }
     }
 }
