@@ -3,11 +3,16 @@
  * @category Horde
  * @package  Autoloader
  */
-class Horde_Autoloader_ClassPathMapper_ApplicationTest extends PHPUnit_Framework_TestCase
+
+namespace Horde\Autoloader\ClassPathMapper;
+use PHPUnit\Framework\TestCase;
+use \Horde_Autoloader_ClassPathMapper_Application;
+
+class ApplicationTest extends TestCase
 {
     private $_mapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_mapper = new Horde_Autoloader_ClassPathMapper_Application(
             'app' // directory to app dir

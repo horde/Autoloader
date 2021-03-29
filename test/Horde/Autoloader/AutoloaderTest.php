@@ -1,9 +1,14 @@
 <?php
-class Horde_Autoloader_AutoloaderTest extends PHPUnit_Framework_TestCase
+
+namespace Horde\Autoloader;
+use PHPUnit\Framework\TestCase;
+use \Horde_Autoloader;
+
+class AutoloaderTest extends TestCase
 {
     private $_autoloader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_autoloader = new Horde_Autoloader_TestHarness();
     }
@@ -74,7 +79,9 @@ class Horde_Autoloader_AutoloaderTest extends PHPUnit_Framework_TestCase
 
     private function _getSuccessfulMapperMock()
     {
-        $mapper = $this->getMock('Horde_Autoloader_ClassPathMapper', array('mapToPath'));
+        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+                        ->setMethods(array('mapToPath'))
+                        ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
@@ -85,7 +92,9 @@ class Horde_Autoloader_AutoloaderTest extends PHPUnit_Framework_TestCase
 
     private function _getUnsuccessfulMapperMock()
     {
-        $mapper = $this->getMock('Horde_Autoloader_ClassPathMapper', array('mapToPath'));
+        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+                        ->setMethods(array('mapToPath'))
+                        ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
