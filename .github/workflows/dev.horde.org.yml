@@ -1,22 +1,18 @@
 # This is a basic workflow to help you get started with Actions
 
-name: PHPDOC
+name: dev.horde.org
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches:
-      - master
-      - maintaina-composerfixed
-      - FRAMEWORK_6_0
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   run:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: Setup github ssh key
       run:  mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
@@ -30,17 +26,17 @@ jobs:
         git config --global user.name "PHPDOC CI Job"
         git config --global user.email "ci-job@maintaina.com"
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Checkout Doc Dir
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
-        repository: maintaina/phpdoc
+        repository: horde/dev.horde.org
         token: ${{secrets.PHPDOC_TOKEN}}
-        path: "phpdoc-git"
+        path: "dev.horde.org"
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.4
+        php-version: latest
         extensions: bcmath, ctype, curl, dom, gd, gettext, iconv, imagick, json, ldap, mbstring, mysql, opcache, openssl, pcntl, pdo, posix, redis, soap, sockets, sqlite, tokenizer, xmlwriter
         ini-values: post_max_size=512M, max_execution_time=360
         coverage: xdebug
@@ -51,6 +47,8 @@ jobs:
       run: |
         export UUT_DIR=$(pwd)
         export REPO=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        export LCREPO=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print tolower($2)}' | sed -e "s/:refs//")
+        export ORG=$GITHUB_REPOSITORY_OWNER
         export WORK_DIR=/home/runner/
         export BIN_DIR="${WORK_DIR}/bin"
         wget https://phpdoc.org/phpDocumentor.phar
@@ -58,12 +56,15 @@ jobs:
         mv phpDocumentor.phar $BIN_DIR/phpdocumentor
         chmod +x "${BIN_DIR}/phpdocumentor"
         echo "Creating UUT related dir in docu repo"
-        mkdir -p $UUT_DIR/phpdoc-git/${GITHUB_REF##*/}/${REPO}/
+        mkdir -p $UUT_DIR/dev.horde.org/${GITHUB_REF##*/}/${LCREPO}/
         ## Look into any of lib, src, app (if they exist) but not test, migration, bin, locale or script dirs
-        $BIN_DIR/phpdocumentor -d $UUT_DIR/lib/ -d $UUT_DIR/src/ -d $UUT_DIR/app/ -t "${UUT_DIR}/phpdoc-git/${GITHUB_REF##*/}/${REPO}/"
-        cd ${UUT_DIR}/phpdoc-git
-        git add "${GITHUB_REF##*/}/${REPO}"
-        php indexer.php ${GITHUB_REF##*/} $REPO
-        git add index.html index.json
-        git commit -m "Updated phpdoc for $GITHUB_REPOSITORY (${GITHUB_REF##*/} branch) from ci"
+        $BIN_DIR/phpdocumentor -d $UUT_DIR/lib/ -d $UUT_DIR/src/ -d $UUT_DIR/app/ -t "${UUT_DIR}/dev.horde.org/phpdoc/${GITHUB_REF##*/}/${LCREPO}/"
+        cd ${UUT_DIR}/dev.horde.org
+        git add "phpdoc/${GITHUB_REF##*/}/${LCREPO}"
+        ## SATIS
+        composer create-project composer/satis:dev-main
+        php satis/bin/satis add https://github.com/$ORG/$REPO --type=vcs --name=horde/${LCREPO} || true
+        php satis/bin/satis build -vvv  ./satis.json . horde/${LCREPO}
+        git add include/ index.html p2/ packages.json satis.json dist/
+        git commit -m "Updated for $GITHUB_REPOSITORY (${GITHUB_REF##*/} branch) from ci"
         git push

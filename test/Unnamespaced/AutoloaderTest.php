@@ -1,6 +1,6 @@
 <?php
 
-namespace Horde\Autoloader;
+namespace Horde\Autoloader\Test\Unnamespaced;
 use PHPUnit\Framework\TestCase;
 use \Horde_Autoloader;
 
