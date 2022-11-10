@@ -4,7 +4,7 @@
  * @package  Autoloader
  */
 
-namespace Horde\Autoloader\ClassPathMapper;
+namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
 use PHPUnit\Framework\TestCase;
 use \Horde_Autoloader_ClassPathMapper_Default;
 

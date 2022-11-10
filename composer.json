@@ -27,7 +27,10 @@
     "require": {
         "php": "^7.4 || ^8"
     },
-    "require-dev": {},
+    "require-dev": {
+        "horde/test": "^3 || dev-FRAMEWORK_6_0"
+
+    },
     "suggest": {
         "horde/test": "^3 || dev-FRAMEWORK_6_0"
     },

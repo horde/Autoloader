@@ -31,6 +31,6 @@ license:
 dependencies:
   required:
     php: ^7.4 || ^8
-  optional:
+  dev:
     composer:
       horde/test: ^3
