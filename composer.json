@@ -31,7 +31,7 @@
         "pear-pear.horde.org/horde_test": "^2.1"
     },
     "replace": {
-        "pear-pear.horde.org/horde_autoloader": "2.*",
+        "pear-pear.horde.org/horde_autoloader": "2.*"
     },
     "autoload": {
         "psr-0": {
