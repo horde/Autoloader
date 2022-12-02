@@ -12,9 +12,9 @@
  * @package  Autoloader
  */
 
-require_once 'Horde/Autoloader.php';
-require_once 'Horde/Autoloader/ClassPathMapper.php';
-require_once 'Horde/Autoloader/ClassPathMapper/Default.php';
+require_once dirname(__FILE__, 2) . '/Autoloader.php';
+require_once dirname(__FILE__, 1) . '/ClassPathMapper.php';
+require_once dirname(__FILE__, 1) . '/ClassPathMapper/Default.php';
 
 /**
  * Default autoloader definition that uses the include path with default
