@@ -40,12 +40,19 @@ jobs:
 
     - name: Setup Github Token as composer credential
       run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
-    - name: Install horde/test dependency and other dependencies
+    - name: Install development dependencies
       run: |
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer config minimum-stability dev
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer config allow-plugins true
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer install --no-progress
     - name: Run PHPUnit
       run: phpunit
+    - name: Upload Test Results
+      run: |
+      cd .phpunit.results.cache
+      export REPO=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+      tar zcf results.tar.gz *
+      echo "curl ${{ CI_URI }}/ci/phpunit/${{ CI_COMPOSER_VENDOR }}/$REPO/${GITHUB_REF##*/}/${{ matrix.php-versions }} -H \"Authorization: Bearer ${{ secrets.CI_BEARER_AUTH_VALUE }}\" -T results.tar.gz"
+      curl ${{ CI_URI }}/ci/phpunit/${{ CI_COMPOSER_VENDOR }}/$REPO/${GITHUB_REF##*/}/${{ matrix.php-versions }} -H "Authorization: Bearer ${{ secrets.CI_BEARER_AUTH_VALUE }}" -T results.tar.gz
     - name: Run PHPStan for the src/ dir
-      run: if [ -d src ]; then phpstan analyse --no-progress src; else echo "no"; fi
+      run: if [ -d src ]; then phpstan analyse --no-progress src; else echo "NO PHPSTAN"; fi
