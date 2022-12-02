@@ -27,12 +27,6 @@ jobs:
         git config --global user.email "ci-job@maintaina.com"
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Checkout Doc Dir
-      uses: actions/checkout@v3
-      with:
-        repository: horde/dev.horde.org
-        token: ${{secrets.PHPDOC_TOKEN}}
-        path: "dev.horde.org"
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -56,15 +50,10 @@ jobs:
         mv phpDocumentor.phar $BIN_DIR/phpdocumentor
         chmod +x "${BIN_DIR}/phpdocumentor"
         echo "Creating UUT related dir in docu repo"
-        mkdir -p $UUT_DIR/dev.horde.org/${GITHUB_REF##*/}/${LCREPO}/
+        mkdir -p $UUT_DIR/phpdoc
         ## Look into any of lib, src, app (if they exist) but not test, migration, bin, locale or script dirs
-        $BIN_DIR/phpdocumentor -d $UUT_DIR/lib/ -d $UUT_DIR/src/ -d $UUT_DIR/app/ -t "${UUT_DIR}/dev.horde.org/phpdoc/${GITHUB_REF##*/}/${LCREPO}/"
-        cd ${UUT_DIR}/dev.horde.org
-        git add "phpdoc/${GITHUB_REF##*/}/${LCREPO}"
-        ## SATIS
-        composer create-project composer/satis:dev-main
-        php satis/bin/satis add https://github.com/$ORG/$REPO --type=vcs --name=horde/${LCREPO} || true
-        php satis/bin/satis build -vvv  ./satis.json . horde/${LCREPO}
-        git add include/ index.html p2/ packages.json satis.json dist/
-        git commit -m "Updated for $GITHUB_REPOSITORY (${GITHUB_REF##*/} branch) from ci"
-        git push
+        $BIN_DIR/phpdocumentor -d $UUT_DIR/lib/ -d $UUT_DIR/src/ -d $UUT_DIR/app/ -t "${UUT_DIR}/phpdoc/"
+        cd ${UUT_DIR}/phpdoc
+        tar zcf phpdoc.tgz *
+        cd ..
+        curl ${{ secrets.CI_URI }}/ci/phpdoc/${{ secrets.CI_COMPOSER_VENDOR }}/$REPO/${GITHUB_REF##*/}/${{ matrix.php-versions }} -H "Authorization: Bearer ${{ secrets.CI_BEARER_AUTH_VALUE }}" -T results.tar.gz
