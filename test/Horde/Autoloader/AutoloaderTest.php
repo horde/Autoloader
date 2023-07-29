@@ -1,5 +1,5 @@
 <?php
-class Horde_Autoloader_AutoloaderTest extends PHPUnit_Framework_TestCase
+class Horde_Autoloader_AutoloaderTest extends Horde_Test_Case
 {
     private $_autoloader;
 

@@ -4,7 +4,7 @@
  * @package  Autoloader
  */
 class Horde_Autoloader_ClassPathMapper_PrefixStringTest
-extends PHPUnit_Framework_TestCase
+extends Horde_Test_Case
 {
     private $_mapper;
 

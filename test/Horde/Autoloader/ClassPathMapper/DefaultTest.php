@@ -3,7 +3,7 @@
  * @category Horde
  * @package  Autoloader
  */
-class Horde_Autoloader_ClassPathMapper_DefaultTest extends PHPUnit_Framework_TestCase
+class Horde_Autoloader_ClassPathMapper_DefaultTest extends Horde_Test_Case
 {
     private $_mapper;
 
