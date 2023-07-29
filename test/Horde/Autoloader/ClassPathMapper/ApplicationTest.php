@@ -7,7 +7,7 @@ class Horde_Autoloader_ClassPathMapper_ApplicationTest extends Horde_Test_Case
 {
     private $_mapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_mapper = new Horde_Autoloader_ClassPathMapper_Application(
             'app' // directory to app dir

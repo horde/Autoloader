@@ -3,7 +3,7 @@ class Horde_Autoloader_AutoloaderTest extends Horde_Test_Case
 {
     private $_autoloader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_autoloader = new Horde_Autoloader_TestHarness();
     }
@@ -74,7 +74,9 @@ class Horde_Autoloader_AutoloaderTest extends Horde_Test_Case
 
     private function _getSuccessfulMapperMock()
     {
-        $mapper = $this->getMock('Horde_Autoloader_ClassPathMapper', array('mapToPath'));
+        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+                       ->setMethods(array('mapToPath'))
+                       ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
@@ -85,7 +87,9 @@ class Horde_Autoloader_AutoloaderTest extends Horde_Test_Case
 
     private function _getUnsuccessfulMapperMock()
     {
-        $mapper = $this->getMock('Horde_Autoloader_ClassPathMapper', array('mapToPath'));
+        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+                       ->setMethods(array('mapToPath'))
+                       ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))

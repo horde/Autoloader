@@ -7,7 +7,7 @@ class Horde_Autoloader_ClassPathMapper_PrefixTest extends Horde_Test_Case
 {
     private $_mapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_mapper = new Horde_Autoloader_ClassPathMapper_Prefix('/^App(?:$|_)/i', 'dir');
     }
