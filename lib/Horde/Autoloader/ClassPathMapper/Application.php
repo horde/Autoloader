@@ -23,6 +23,7 @@
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Autoloader
  */
+#[\AllowDynamicProperties]
 class Horde_Autoloader_ClassPathMapper_Application
 implements Horde_Autoloader_ClassPathMapper
 {
