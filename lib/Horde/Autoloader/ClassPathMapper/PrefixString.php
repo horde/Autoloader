@@ -47,6 +47,9 @@ implements Horde_Autoloader_ClassPathMapper
     public function __construct($prefix, $includePath)
     {
         $this->_includePath = $includePath;
+        if ($prefix == null) {
+            $prefix = '';
+        }
         $this->_prefix = $prefix;
     }
 
