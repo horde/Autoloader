@@ -42,6 +42,11 @@ implements Horde_Autoloader_ClassPathMapper
     protected $_appDir;
 
     /**
+     * @var string
+     */
+    protected $_classMatchRegex;
+
+    /**
      * @var array
      */
     protected $_mappings = array();
