@@ -19,10 +19,12 @@
     "time": "2025-05-22",
     "repositories": [],
     "require": {
-        "php": "^7.4 || ^8"
+        "php": "^8.2"
     },
     "require-dev": {
-        "horde/test": "^3 || dev-FRAMEWORK_6_0"
+        "phpunit/phpunit": "^12",
+        "friendsofphp/php-cs-fixer": "^3",
+        "phpstan/phpstan": "^2"
     },
     "suggest": {},
     "autoload": {
