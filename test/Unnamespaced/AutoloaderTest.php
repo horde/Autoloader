@@ -1,104 +1,119 @@
 <?php
 
-namespace Horde\Autoloader\Test\Unnamespaced;
-use PHPUnit\Framework\TestCase;
-use \Horde_Autoloader;
+declare(strict_types=1);
 
+/**
+ * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
+ *
+ * See the enclosed file LICENSE for license information (LGPL). If you
+ * did not receive this file, see http://www.horde.org/licenses/lgpl21.
+ *
+ * @category Horde
+ * @package  Autoloader
+ */
+
+namespace Horde\Autoloader\Test\Unnamespaced;
+
+use Horde_Autoloader;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Horde_Autoloader::class)]
 class AutoloaderTest extends TestCase
 {
-    private $_autoloader;
+    private Horde_Autoloader_TestHarness $autoloader;
 
     public function setUp(): void
     {
-        $this->_autoloader = new Horde_Autoloader_TestHarness();
+        $this->autoloader = new Horde_Autoloader_TestHarness();
     }
 
-    public function testInitialStateShouldYeildNoMatches()
+    public function testInitialStateShouldYeildNoMatches(): void
     {
-        $this->assertNull($this->_autoloader->mapToPath('The_Class_Name'));
+        $this->assertNull($this->autoloader->mapToPath('The_Class_Name'));
     }
 
-    public function testInitialStateShouldNotLoadAnyFiles()
+    public function testInitialStateShouldNotLoadAnyFiles(): void
     {
-        $this->assertFalse($this->_autoloader->loadClass('The_Class_Name'));
+        $this->assertFalse($this->autoloader->loadClass('The_Class_Name'));
     }
 
-    public function testShouldNotMapClassIfMapperDoesNotReturnAPath()
+    public function testShouldNotMapClassIfMapperDoesNotReturnAPath(): void
     {
-        $this->_autoloader->addClassPathMapper($this->_getUnsuccessfulMapperMock());
-        $this->assertNull($this->_autoloader->mapToPath('The_Class_Name'));
+        $this->autoloader->addClassPathMapper($this->getUnsuccessfulMapperMock());
+        $this->assertNull($this->autoloader->mapToPath('The_Class_Name'));
     }
 
-    public function testShouldLoadPathMapperDoesNotReturnAPath()
+    public function testShouldLoadPathMapperDoesNotReturnAPath(): void
     {
-        $this->_autoloader->addClassPathMapper($this->_getUnsuccessfulMapperMock());
-        $this->assertFalse($this->_autoloader->loadClass('The_Class_Name'));
+        $this->autoloader->addClassPathMapper($this->getUnsuccessfulMapperMock());
+        $this->assertFalse($this->autoloader->loadClass('The_Class_Name'));
     }
 
-    public function testShouldMapClassIfAMapperReturnsAPath()
+    public function testShouldMapClassIfAMapperReturnsAPath(): void
     {
         // trick the autoloader into thinking the returned path exists
-        $this->_autoloader->setFileExistsResponse(true);
+        $this->autoloader->setFileExistsResponse(true);
 
-        $this->_autoloader->addClassPathMapper($this->_getSuccessfulMapperMock());
+        $this->autoloader->addClassPathMapper($this->getSuccessfulMapperMock());
 
-        $this->assertEquals('The/Class/Name.php', $this->_autoloader->mapToPath('The_Class_Name'));
+        $this->assertEquals('The/Class/Name.php', $this->autoloader->mapToPath('The_Class_Name'));
     }
 
-    public function testShouldNotMapClassIfAMapperReturnsAPathThatDoesNotExist()
+    public function testShouldNotMapClassIfAMapperReturnsAPathThatDoesNotExist(): void
     {
         // trick the autoloader into thinking the returned path does not exist
-        $this->_autoloader->setFileExistsResponse(false);
+        $this->autoloader->setFileExistsResponse(false);
 
-        $this->_autoloader->addClassPathMapper($this->_getSuccessfulMapperMock());
+        $this->autoloader->addClassPathMapper($this->getSuccessfulMapperMock());
 
-        $this->assertNull($this->_autoloader->mapToPath('The_Class_Name'));
+        $this->assertNull($this->autoloader->mapToPath('The_Class_Name'));
     }
 
-    public function testShouldLoadFileIfMapperReturnsAValidPath()
+    public function testShouldLoadFileIfMapperReturnsAValidPath(): void
     {
         // trick the autoloader into thinking the returned path exists and was included
-        $this->_autoloader->setFileExistsResponse(true);
-        $this->_autoloader->setIncludeResponse(true);
+        $this->autoloader->setFileExistsResponse(true);
+        $this->autoloader->setIncludeResponse(true);
 
-        $this->_autoloader->addClassPathMapper($this->_getSuccessfulMapperMock());
+        $this->autoloader->addClassPathMapper($this->getSuccessfulMapperMock());
 
-        $this->assertTrue($this->_autoloader->loadClass('The_Class_Name'));
+        $this->assertTrue($this->autoloader->loadClass('The_Class_Name'));
     }
 
-    public function testShouldLoadFileIfMapperReturnsAValidPathButIncludingItFails()
+    public function testShouldLoadFileIfMapperReturnsAValidPathButIncludingItFails(): void
     {
         // trick the autoloader into thinking the returned path exists and was included
-        $this->_autoloader->setFileExistsResponse(true);
-        $this->_autoloader->setIncludeResponse(false);
+        $this->autoloader->setFileExistsResponse(true);
+        $this->autoloader->setIncludeResponse(false);
 
-        $this->_autoloader->addClassPathMapper($this->_getSuccessfulMapperMock());
+        $this->autoloader->addClassPathMapper($this->getSuccessfulMapperMock());
 
-        $this->assertFalse($this->_autoloader->loadClass('The_Class_Name'));
+        $this->assertFalse($this->autoloader->loadClass('The_Class_Name'));
     }
 
-    private function _getSuccessfulMapperMock()
+    private function getSuccessfulMapperMock()
     {
         $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
-                        ->setMethods(array('mapToPath'))
+                        ->onlyMethods(['mapToPath'])
                         ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
-            ->will($this->returnValue('The/Class/Name.php'));
+            ->willReturn('The/Class/Name.php');
 
         return $mapper;
     }
 
-    private function _getUnsuccessfulMapperMock()
+    private function getUnsuccessfulMapperMock()
     {
         $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
-                        ->setMethods(array('mapToPath'))
+                        ->onlyMethods(['mapToPath'])
                         ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         return $mapper;
     }
@@ -106,26 +121,26 @@ class AutoloaderTest extends TestCase
 
 class Horde_Autoloader_TestHarness extends Horde_Autoloader
 {
-    private $_includeResponse;
-    private $_fileExistsResponse;
+    private bool|null $includeResponse = null;
+    private bool|null $fileExistsResponse = null;
 
-    public function setIncludeResponse($bool)
+    public function setIncludeResponse(bool $value): void
     {
-        $this->_includeResponse = $bool;
+        $this->includeResponse = $value;
     }
 
-    public function setFileExistsResponse($bool)
+    public function setFileExistsResponse(bool $value): void
     {
-        $this->_fileExistsResponse = $bool;
+        $this->fileExistsResponse = $value;
     }
 
     protected function _include($path)
     {
-        return $this->_includeResponse;
+        return $this->includeResponse;
     }
 
     protected function _fileExists($path)
     {
-        return $this->_fileExistsResponse;
+        return $this->fileExistsResponse;
     }
 }

@@ -1,45 +1,54 @@
 <?php
+
+declare(strict_types=1);
+
 /**
+ * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
+ *
+ * See the enclosed file LICENSE for license information (LGPL). If you
+ * did not receive this file, see http://www.horde.org/licenses/lgpl21.
+ *
  * @category Horde
  * @package  Autoloader
  */
 
 namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
-use PHPUnit\Framework\TestCase;
-use \Horde_Autoloader_ClassPathMapper_PrefixString;
 
+use Horde_Autoloader_ClassPathMapper_PrefixString;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Horde_Autoloader_ClassPathMapper_PrefixString::class)]
 class PrefixStringTest extends TestCase
 {
-    private $_mapper;
+    private Horde_Autoloader_ClassPathMapper_PrefixString $mapper;
 
     public function setUp(): void
     {
-        $this->_mapper = new Horde_Autoloader_ClassPathMapper_PrefixString(
+        $this->mapper = new Horde_Autoloader_ClassPathMapper_PrefixString(
             'App',
             'dir'
         );
     }
 
-    public function providerClassNames()
+    public static function providerClassNames(): array
     {
-        return array(
-            array('App',         'dir/App.php'),
-            array('App_Foo',     'dir/Foo.php'),
-            array('App_Foo_Bar', 'dir/Foo/Bar.php'),
-            array('App\Foo\Bar', 'dir/Foo/Bar.php'),
-            array('app_foo',     'dir/foo.php')
-        );
+        return [
+            ['App',         'dir/App.php'],
+            ['App_Foo',     'dir/Foo.php'],
+            ['App_Foo_Bar', 'dir/Foo/Bar.php'],
+            ['App\Foo\Bar', 'dir/Foo/Bar.php'],
+            ['app_foo',     'dir/foo.php']
+        ];
     }
 
-    /**
-     * @dataProvider providerClassNames
-     */
-    public function testShouldMapClassToPath($className, $classPath)
+    #[DataProvider('providerClassNames')]
+    public function testShouldMapClassToPath(string $className, string $classPath): void
     {
         $this->assertEquals(
             $classPath,
-            $this->_mapper->mapToPath($className)
+            $this->mapper->mapToPath($className)
         );
     }
-
 }
