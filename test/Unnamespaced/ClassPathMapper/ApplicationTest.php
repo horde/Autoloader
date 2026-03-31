@@ -1,62 +1,70 @@
 <?php
+
+declare(strict_types=1);
+
 /**
+ * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
+ *
+ * See the enclosed file LICENSE for license information (LGPL). If you
+ * did not receive this file, see http://www.horde.org/licenses/lgpl21.
+ *
  * @category Horde
  * @package  Autoloader
  */
 
 namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
-use PHPUnit\Framework\TestCase;
-use \Horde_Autoloader_ClassPathMapper_Application;
 
+use Horde_Autoloader_ClassPathMapper_Application;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Horde_Autoloader_ClassPathMapper_Application::class)]
 class ApplicationTest extends TestCase
 {
-    private $_mapper;
+    private Horde_Autoloader_ClassPathMapper_Application $mapper;
 
     public function setUp(): void
     {
-        $this->_mapper = new Horde_Autoloader_ClassPathMapper_Application(
+        $this->mapper = new Horde_Autoloader_ClassPathMapper_Application(
             'app' // directory to app dir
         );
-        $this->_mapper->addMapping('Suffix', 'subdir');
+        $this->mapper->addMapping('Suffix', 'subdir');
     }
 
-    public function providerValidClassNames()
+    public static function providerValidClassNames(): array
     {
-        return array(
-            array('Module_Action_Suffix', 'app/subdir/Action.php'),
-            array('MyModule_Action_Suffix', 'app/subdir/Action.php'),
-            array('Module_MyAction_Suffix', 'app/subdir/MyAction.php'),
-            array('MyModule_MyAction_Suffix', 'app/subdir/MyAction.php'),
-        );
+        return [
+            ['Module_Action_Suffix', 'app/subdir/Action.php'],
+            ['MyModule_Action_Suffix', 'app/subdir/Action.php'],
+            ['Module_MyAction_Suffix', 'app/subdir/MyAction.php'],
+            ['MyModule_MyAction_Suffix', 'app/subdir/MyAction.php'],
+        ];
     }
 
-    /**
-     * @dataProvider providerValidClassNames
-     */
-    public function testShouldMapValidAppClassToAppPath($validClassName, $classPath)
+    #[DataProvider('providerValidClassNames')]
+    public function testShouldMapValidAppClassToAppPath(string $validClassName, string $classPath): void
     {
         $this->assertEquals(
             $classPath,
-            $this->_mapper->mapToPath($validClassName)
+            $this->mapper->mapToPath($validClassName)
         );
     }
 
-    public function providerInvalidClassNames()
+    public static function providerInvalidClassNames(): array
     {
-        return array(
-            array('Module_Action_BadSuffix'),
-            array('module_Action_Suffix'),
-            array('Module_action_Suffix'),
-            array('Module-Action-Suffix'),
-            array(''),
-        );
+        return [
+            ['Module_Action_BadSuffix'],
+            ['module_Action_Suffix'],
+            ['Module_action_Suffix'],
+            ['Module-Action-Suffix'],
+            [''],
+        ];
     }
 
-    /**
-     * @dataProvider providerInvalidClassNames
-     */
-    public function testShouldIgnoreInvalidAppClassNames($invalidClassName)
+    #[DataProvider('providerInvalidClassNames')]
+    public function testShouldIgnoreInvalidAppClassNames(string $invalidClassName): void
     {
-        $this->assertNull($this->_mapper->mapToPath($invalidClassName));
+        $this->assertNull($this->mapper->mapToPath($invalidClassName));
     }
 }

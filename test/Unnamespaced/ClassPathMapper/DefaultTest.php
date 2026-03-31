@@ -1,50 +1,60 @@
 <?php
+
+declare(strict_types=1);
+
 /**
+ * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
+ *
+ * See the enclosed file LICENSE for license information (LGPL). If you
+ * did not receive this file, see http://www.horde.org/licenses/lgpl21.
+ *
  * @category Horde
  * @package  Autoloader
  */
 
 namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
-use PHPUnit\Framework\TestCase;
-use \Horde_Autoloader_ClassPathMapper_Default;
 
+use Horde_Autoloader_ClassPathMapper_Default;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Horde_Autoloader_ClassPathMapper_Default::class)]
 class DefaultTest extends TestCase
 {
-    private $_mapper;
+    private Horde_Autoloader_ClassPathMapper_Default $mapper;
 
     public function setUp(): void
     {
-        $this->_mapper = new Horde_Autoloader_ClassPathMapper_Default('dir');
+        $this->mapper = new Horde_Autoloader_ClassPathMapper_Default('dir');
     }
 
-    public function providerClassNames()
+    public static function providerClassNames(): array
     {
         return array_map(
             function ($a) {
                 $a[1] = str_replace('/', DIRECTORY_SEPARATOR, $a[1]);
                 return $a;
             },
-            array(
-                array('Module_Action_Suffix', 'dir/Module/Action/Suffix.php'),
-                array('MyModule_Action_Suffix', 'dir/MyModule/Action/Suffix.php'),
-                array('Module_MyAction_Suffix', 'dir/Module/MyAction/Suffix.php'),
-                array('MyModule_MyAction_Suffix', 'dir/MyModule/MyAction/Suffix.php'),
-                array('Module\Action\Suffix', 'dir/Module/Action/Suffix.php'),
-                array('MyModule\Action\Suffix', 'dir/MyModule/Action/Suffix.php'),
-                array('Module\MyAction\Suffix', 'dir/Module/MyAction/Suffix.php'),
-                array('MyModule\MyAction\Suffix', 'dir/MyModule/MyAction/Suffix.php'),
-            )
+            [
+                ['Module_Action_Suffix', 'dir/Module/Action/Suffix.php'],
+                ['MyModule_Action_Suffix', 'dir/MyModule/Action/Suffix.php'],
+                ['Module_MyAction_Suffix', 'dir/Module/MyAction/Suffix.php'],
+                ['MyModule_MyAction_Suffix', 'dir/MyModule/MyAction/Suffix.php'],
+                ['Module\Action\Suffix', 'dir/Module/Action/Suffix.php'],
+                ['MyModule\Action\Suffix', 'dir/MyModule/Action/Suffix.php'],
+                ['Module\MyAction\Suffix', 'dir/Module/MyAction/Suffix.php'],
+                ['MyModule\MyAction\Suffix', 'dir/MyModule/MyAction/Suffix.php'],
+            ]
         );
     }
 
-    /**
-     * @dataProvider providerClassNames
-     */
-    public function testShouldMapClassToPath($className, $classPath)
+    #[DataProvider('providerClassNames')]
+    public function testShouldMapClassToPath(string $className, string $classPath): void
     {
         $this->assertEquals(
             $classPath,
-            $this->_mapper->mapToPath($className)
+            $this->mapper->mapToPath($className)
         );
     }
 }
