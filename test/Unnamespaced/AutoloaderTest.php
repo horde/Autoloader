@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace Horde\Autoloader\Test\Unnamespaced;
 
 use Horde_Autoloader;
+use Horde_Autoloader_ClassPathMapper;
+use Horde_Autoloader_ClassPathMapper_Default;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -90,6 +92,132 @@ class AutoloaderTest extends TestCase
         $this->autoloader->addClassPathMapper($this->getSuccessfulMapperMock());
 
         $this->assertFalse($this->autoloader->loadClass('The_Class_Name'));
+    }
+
+    public function testCallbackExecutedAfterSuccessfulLoad(): void
+    {
+        $callbackExecuted = false;
+        $callback = function () use (&$callbackExecuted) {
+            $callbackExecuted = true;
+        };
+
+        $this->autoloader->setFileExistsResponse(true);
+        $this->autoloader->setIncludeResponse(true);
+        $this->autoloader->addClassPathMapper(
+            new Horde_Autoloader_ClassPathMapper_Default('.')
+        );
+
+        $this->autoloader->addCallback('Test_Class', $callback);
+        $this->autoloader->loadClass('Test_Class');
+
+        $this->assertTrue($callbackExecuted, 'Callback was not executed after successful load');
+    }
+
+    public function testCallbackNotExecutedWhenLoadFails(): void
+    {
+        $callbackExecuted = false;
+
+        $this->autoloader->setFileExistsResponse(false);
+
+        $this->autoloader->addCallback('Test_Class', function () use (&$callbackExecuted) {
+            $callbackExecuted = true;
+        });
+
+        $this->autoloader->loadClass('Test_Class');
+
+        $this->assertFalse($callbackExecuted, 'Callback should not execute on load failure');
+    }
+
+    public function testCallbackIsCaseInsensitive(): void
+    {
+        $callbackExecuted = false;
+
+        $this->autoloader->setFileExistsResponse(true);
+        $this->autoloader->setIncludeResponse(true);
+        $this->autoloader->addClassPathMapper(
+            new Horde_Autoloader_ClassPathMapper_Default('.')
+        );
+
+        // Register with UPPERCASE
+        $this->autoloader->addCallback('TEST_CLASS', function () use (&$callbackExecuted) {
+            $callbackExecuted = true;
+        });
+
+        // Load with mixed case
+        $this->autoloader->loadClass('Test_Class');
+
+        $this->assertTrue($callbackExecuted, 'Callback should be case-insensitive');
+    }
+
+    public function testRegisterAutoloader(): void
+    {
+        $autoloader = new Horde_Autoloader();
+        $autoloader->registerAutoloader();
+
+        $registered = spl_autoload_functions();
+        $found = false;
+        foreach ($registered as $func) {
+            if (is_array($func) && $func[0] === $autoloader && $func[1] === 'loadClass') {
+                $found = true;
+                break;
+            }
+        }
+
+        $this->assertTrue($found, 'Autoloader not registered with SPL');
+
+        // Cleanup
+        spl_autoload_unregister([$autoloader, 'loadClass']);
+    }
+
+    public function testMappersSearchedInLIFOOrder(): void
+    {
+        $this->autoloader->setFileExistsResponse(true);
+
+        // First mapper added
+        $firstMapper = $this->getMockBuilder(Horde_Autoloader_ClassPathMapper::class)
+            ->onlyMethods(['mapToPath'])
+            ->getMock();
+        $firstMapper->expects($this->never())
+            ->method('mapToPath');
+
+        // Second mapper added (should be searched first - LIFO)
+        $secondMapper = $this->getMockBuilder(Horde_Autoloader_ClassPathMapper::class)
+            ->onlyMethods(['mapToPath'])
+            ->getMock();
+        $secondMapper->expects($this->once())
+            ->method('mapToPath')
+            ->willReturn('second/Class.php');
+
+        // Add first, then second
+        $this->autoloader->addClassPathMapper($firstMapper);
+        $this->autoloader->addClassPathMapper($secondMapper);
+
+        // Second mapper should be consulted first (LIFO = Last In First Out)
+        $path = $this->autoloader->mapToPath('Test_Class');
+
+        $this->assertEquals('second/Class.php', $path);
+    }
+
+    public function testAddClassPathMapperReturnsThis(): void
+    {
+        $autoloader = new Horde_Autoloader();
+        $mapper = new Horde_Autoloader_ClassPathMapper_Default('.');
+
+        $result = $autoloader->addClassPathMapper($mapper);
+
+        $this->assertSame($autoloader, $result, 'Should return this for fluent interface');
+    }
+
+    public function testLoadClassWithEmptyString(): void
+    {
+        $autoloader = new Horde_Autoloader();
+        $this->assertFalse($autoloader->loadClass(''));
+    }
+
+    public function testMapToPathWithEmptyString(): void
+    {
+        $autoloader = new Horde_Autoloader();
+        $this->assertNull($autoloader->mapToPath(''));
     }
 
     private function getSuccessfulMapperMock()
