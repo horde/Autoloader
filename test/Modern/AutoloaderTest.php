@@ -12,22 +12,22 @@ declare(strict_types=1);
  * @package  Autoloader
  */
 
-namespace Horde\Autoloader\Test\Unnamespaced;
+namespace Horde\Autoloader\Test\Modern;
 
-use Horde_Autoloader;
-use Horde_Autoloader_ClassPathMapper;
-use Horde_Autoloader_ClassPathMapper_Default;
+use Horde\Autoloader\Autoloader;
+use Horde\Autoloader\ClassPathMapper;
+use Horde\Autoloader\ClassPathMapper\DefaultMapper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Horde_Autoloader::class)]
+#[CoversClass(Autoloader::class)]
 class AutoloaderTest extends TestCase
 {
-    private Horde_Autoloader_TestHarness $autoloader;
+    private ModernAutoloaderTestHarness $autoloader;
 
     public function setUp(): void
     {
-        $this->autoloader = new Horde_Autoloader_TestHarness();
+        $this->autoloader = new ModernAutoloaderTestHarness();
     }
 
     public function testInitialStateShouldYeildNoMatches(): void
@@ -104,7 +104,7 @@ class AutoloaderTest extends TestCase
         $this->autoloader->setFileExistsResponse(true);
         $this->autoloader->setIncludeResponse(true);
         $this->autoloader->addClassPathMapper(
-            new Horde_Autoloader_ClassPathMapper_Default('.')
+            new DefaultMapper('.')
         );
 
         $this->autoloader->addCallback('Test_Class', $callback);
@@ -135,7 +135,7 @@ class AutoloaderTest extends TestCase
         $this->autoloader->setFileExistsResponse(true);
         $this->autoloader->setIncludeResponse(true);
         $this->autoloader->addClassPathMapper(
-            new Horde_Autoloader_ClassPathMapper_Default('.')
+            new DefaultMapper('.')
         );
 
         // Register with UPPERCASE
@@ -151,7 +151,7 @@ class AutoloaderTest extends TestCase
 
     public function testRegisterAutoloader(): void
     {
-        $autoloader = new Horde_Autoloader();
+        $autoloader = new Autoloader();
         $autoloader->registerAutoloader();
 
         $registered = spl_autoload_functions();
@@ -174,14 +174,14 @@ class AutoloaderTest extends TestCase
         $this->autoloader->setFileExistsResponse(true);
 
         // First mapper added
-        $firstMapper = $this->getMockBuilder(Horde_Autoloader_ClassPathMapper::class)
+        $firstMapper = $this->getMockBuilder(ClassPathMapper::class)
             ->onlyMethods(['mapToPath'])
             ->getMock();
         $firstMapper->expects($this->never())
             ->method('mapToPath');
 
         // Second mapper added (should be searched first - LIFO)
-        $secondMapper = $this->getMockBuilder(Horde_Autoloader_ClassPathMapper::class)
+        $secondMapper = $this->getMockBuilder(ClassPathMapper::class)
             ->onlyMethods(['mapToPath'])
             ->getMock();
         $secondMapper->expects($this->once())
@@ -200,8 +200,8 @@ class AutoloaderTest extends TestCase
 
     public function testAddClassPathMapperReturnsThis(): void
     {
-        $autoloader = new Horde_Autoloader();
-        $mapper = new Horde_Autoloader_ClassPathMapper_Default('.');
+        $autoloader = new Autoloader();
+        $mapper = new DefaultMapper('.');
 
         $result = $autoloader->addClassPathMapper($mapper);
 
@@ -210,19 +210,19 @@ class AutoloaderTest extends TestCase
 
     public function testLoadClassWithEmptyString(): void
     {
-        $autoloader = new Horde_Autoloader();
+        $autoloader = new Autoloader();
         $this->assertFalse($autoloader->loadClass(''));
     }
 
     public function testMapToPathWithEmptyString(): void
     {
-        $autoloader = new Horde_Autoloader();
+        $autoloader = new Autoloader();
         $this->assertNull($autoloader->mapToPath(''));
     }
 
-    private function getSuccessfulMapperMock()
+    private function getSuccessfulMapperMock(): ClassPathMapper
     {
-        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+        $mapper = $this->getMockBuilder(ClassPathMapper::class)
                         ->onlyMethods(['mapToPath'])
                         ->getMock();
         $mapper->expects($this->once())
@@ -233,21 +233,21 @@ class AutoloaderTest extends TestCase
         return $mapper;
     }
 
-    private function getUnsuccessfulMapperMock()
+    private function getUnsuccessfulMapperMock(): ClassPathMapper
     {
-        $mapper = $this->getMockBuilder('Horde_Autoloader_ClassPathMapper')
+        $mapper = $this->getMockBuilder(ClassPathMapper::class)
                         ->onlyMethods(['mapToPath'])
                         ->getMock();
         $mapper->expects($this->once())
             ->method('mapToPath')
             ->with($this->equalTo('The_Class_Name'))
-            ->willReturn(null);
+            ->willReturn(false);
 
         return $mapper;
     }
 }
 
-class Horde_Autoloader_TestHarness extends Horde_Autoloader
+class ModernAutoloaderTestHarness extends Autoloader
 {
     private ?bool $includeResponse = null;
     private ?bool $fileExistsResponse = null;
@@ -262,12 +262,12 @@ class Horde_Autoloader_TestHarness extends Horde_Autoloader
         $this->fileExistsResponse = $value;
     }
 
-    protected function _include($path)
+    protected function _include(string $path): bool
     {
         return $this->includeResponse;
     }
 
-    protected function _fileExists($path)
+    protected function _fileExists(string $path): bool
     {
         return $this->fileExistsResponse;
     }

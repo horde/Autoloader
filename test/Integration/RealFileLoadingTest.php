@@ -19,6 +19,10 @@ use Horde_Autoloader_ClassPathMapper_Default;
 use Horde_Autoloader_ClassPathMapper_Prefix;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Fixture_Nested_Class;
+use Fixture_Prefixed_Module_Action;
+use Fixture_Simple;
+use Fixture_Third;
 
 #[CoversClass(Horde_Autoloader::class)]
 class RealFileLoadingTest extends TestCase
@@ -49,7 +53,7 @@ class RealFileLoadingTest extends TestCase
         $this->assertTrue(class_exists('Fixture_Simple', false));
 
         // Verify we can actually use the class
-        $instance = new \Fixture_Simple();
+        $instance = new Fixture_Simple();
         $this->assertEquals('simple', $instance->getValue());
     }
 
@@ -68,7 +72,7 @@ class RealFileLoadingTest extends TestCase
         $this->assertTrue(class_exists('Fixture_Nested_Class', false));
 
         // Verify we can actually use the class
-        $instance = new \Fixture_Nested_Class();
+        $instance = new Fixture_Nested_Class();
         $this->assertEquals('nested', $instance->getValue());
     }
 
@@ -131,7 +135,7 @@ class RealFileLoadingTest extends TestCase
         $this->assertTrue(class_exists('Fixture_Prefixed_Module_Action', false));
 
         // Verify we can actually use the class
-        $instance = new \Fixture_Prefixed_Module_Action();
+        $instance = new Fixture_Prefixed_Module_Action();
         $this->assertEquals('prefixed', $instance->getValue());
     }
 
@@ -150,7 +154,7 @@ class RealFileLoadingTest extends TestCase
         $this->assertTrue(class_exists('Fixture_Third'));
 
         // Verify we can instantiate it
-        $instance = new \Fixture_Third();
+        $instance = new Fixture_Third();
         $this->assertEquals('third', $instance->getValue());
 
         // Cleanup

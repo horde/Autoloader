@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
+ * Copyright 2014-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -12,21 +12,21 @@ declare(strict_types=1);
  * @package  Autoloader
  */
 
-namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
+namespace Horde\Autoloader\Test\Modern\ClassPathMapper;
 
-use Horde_Autoloader_ClassPathMapper_PrefixString;
+use Horde\Autoloader\ClassPathMapper\PrefixString;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Horde_Autoloader_ClassPathMapper_PrefixString::class)]
+#[CoversClass(PrefixString::class)]
 class PrefixStringTest extends TestCase
 {
-    private Horde_Autoloader_ClassPathMapper_PrefixString $mapper;
+    private PrefixString $mapper;
 
     public function setUp(): void
     {
-        $this->mapper = new Horde_Autoloader_ClassPathMapper_PrefixString(
+        $this->mapper = new PrefixString(
             'App',
             'dir'
         );

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Most basic usage example for Horde_Autoloader
  * Load the default Horde Autoloader without any additional parameters

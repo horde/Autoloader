@@ -12,24 +12,21 @@ declare(strict_types=1);
  * @package  Autoloader
  */
 
-namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
+namespace Horde\Autoloader\Test\Modern\ClassPathMapper;
 
-use Horde_Autoloader_ClassPathMapper_PrefixString;
+use Horde\Autoloader\ClassPathMapper\Prefix;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Horde_Autoloader_ClassPathMapper_PrefixString::class)]
-class PrefixStringTest extends TestCase
+#[CoversClass(Prefix::class)]
+class PrefixTest extends TestCase
 {
-    private Horde_Autoloader_ClassPathMapper_PrefixString $mapper;
+    private Prefix $mapper;
 
     public function setUp(): void
     {
-        $this->mapper = new Horde_Autoloader_ClassPathMapper_PrefixString(
-            'App',
-            'dir'
-        );
+        $this->mapper = new Prefix('/^App(?:$|_)/i', 'dir');
     }
 
     public static function providerClassNames(): array
@@ -38,8 +35,6 @@ class PrefixStringTest extends TestCase
             ['App',         'dir/App.php'],
             ['App_Foo',     'dir/Foo.php'],
             ['App_Foo_Bar', 'dir/Foo/Bar.php'],
-            ['App\Foo\Bar', 'dir/Foo/Bar.php'],
-            ['app_foo',     'dir/foo.php'],
         ];
     }
 
@@ -50,12 +45,5 @@ class PrefixStringTest extends TestCase
             $classPath,
             $this->mapper->mapToPath($className)
         );
-    }
-
-    public function testCaseInsensitiveMatching(): void
-    {
-        $this->assertEquals('dir/Foo.php', $this->mapper->mapToPath('APP_Foo'));
-        $this->assertEquals('dir/Bar.php', $this->mapper->mapToPath('aPp_Bar'));
-        $this->assertEquals('dir/Baz.php', $this->mapper->mapToPath('aPp_Baz'));
     }
 }

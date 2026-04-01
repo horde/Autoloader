@@ -12,21 +12,21 @@ declare(strict_types=1);
  * @package  Autoloader
  */
 
-namespace Horde\Autoloader\Test\Unnamespaced\ClassPathMapper;
+namespace Horde\Autoloader\Test\Modern\ClassPathMapper;
 
-use Horde_Autoloader_ClassPathMapper_Application;
+use Horde\Autoloader\ClassPathMapper\Application;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Horde_Autoloader_ClassPathMapper_Application::class)]
+#[CoversClass(Application::class)]
 class ApplicationTest extends TestCase
 {
-    private Horde_Autoloader_ClassPathMapper_Application $mapper;
+    private Application $mapper;
 
     public function setUp(): void
     {
-        $this->mapper = new Horde_Autoloader_ClassPathMapper_Application(
+        $this->mapper = new Application(
             'app' // directory to app dir
         );
         $this->mapper->addMapping('Suffix', 'subdir');
@@ -65,14 +65,14 @@ class ApplicationTest extends TestCase
     #[DataProvider('providerInvalidClassNames')]
     public function testShouldIgnoreInvalidAppClassNames(string $invalidClassName): void
     {
-        $this->assertNull($this->mapper->mapToPath($invalidClassName));
+        $this->assertFalse($this->mapper->mapToPath($invalidClassName));
     }
 
     public function testToString(): void
     {
         $string = (string) $this->mapper;
 
-        $this->assertStringContainsString('Horde_Autoloader_ClassPathMapper_Application', $string);
+        $this->assertStringContainsString('Horde\Autoloader\ClassPathMapper\Application', $string);
         $this->assertStringContainsString('app', $string);
     }
 }
