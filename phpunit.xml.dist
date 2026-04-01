@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
-         bootstrap="test/bootstrap.php"
+         bootstrap="vendor/autoload.php"
          cacheDirectory=".phpunit.cache"
          executionOrder="depends,defects"
          requireCoverageMetadata="false"
@@ -12,8 +12,11 @@
          failOnWarning="true"
          colors="true">
     <testsuites>
-        <testsuite name="horde/autoloader">
-            <directory>test</directory>
+        <testsuite name="unit">
+            <directory>test/Unnamespaced</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>test/Integration</directory>
         </testsuite>
     </testsuites>
 

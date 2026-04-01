@@ -51,4 +51,11 @@ class PrefixStringTest extends TestCase
             $this->mapper->mapToPath($className)
         );
     }
+
+    public function testCaseInsensitiveMatching(): void
+    {
+        $this->assertEquals('dir/Foo.php', $this->mapper->mapToPath('APP_Foo'));
+        $this->assertEquals('dir/Bar.php', $this->mapper->mapToPath('aPp_Bar'));
+        $this->assertEquals('dir/Baz.php', $this->mapper->mapToPath('aPp_Baz'));
+    }
 }

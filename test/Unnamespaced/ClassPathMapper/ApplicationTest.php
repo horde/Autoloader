@@ -67,4 +67,12 @@ class ApplicationTest extends TestCase
     {
         $this->assertNull($this->mapper->mapToPath($invalidClassName));
     }
+
+    public function testToString(): void
+    {
+        $string = (string)$this->mapper;
+
+        $this->assertStringContainsString('Horde_Autoloader_ClassPathMapper_Application', $string);
+        $this->assertStringContainsString('app', $string);
+    }
 }
