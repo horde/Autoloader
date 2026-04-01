@@ -31,3 +31,8 @@ license:
 dependencies:
   required:
     php: ^8
+keywords: []
+vendor: horde
+quality:
+  phpstan:
+    level: 4
