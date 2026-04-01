@@ -30,9 +30,4 @@ license:
   uri: http://www.horde.org/licenses/lgpl21
 dependencies:
   required:
-    php: ^8.2
-  dev:
-    composer:
-      phpunit/phpunit: ^12
-      friendsofphp/php-cs-fixer: ^3
-      phpstan/phpstan: ^2
+    php: ^8
