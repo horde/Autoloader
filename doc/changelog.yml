@@ -1,4 +1,20 @@
 ---
+3.0.0-beta1:
+  api: 3.0.0-beta1
+  state:
+    release: beta
+    api: beta
+  date: 2026-04-01
+  license:
+    identifier: LGPL-2.1-only
+    uri: https://spdx.org/licenses/LGPL-2.1-only.html
+  notes: |-
+    docs: upgrade documentation, additional examples and metadata updates.
+    feat: Add a PSR-4 compliant class mapper to Horde\Autoloader\
+    feat: src/ equivalent of the old lib/ autoloader
+    Remove tools as require-dev - they are loaded externally
+    test: Improve coverage and modernize
+    test: Modernize test suite
 3.0.0-alpha5:
   api: 3.0.0-alpha1
   state:

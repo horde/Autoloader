@@ -26,6 +26,9 @@
     "autoload": {
         "psr-0": {
             "Horde_Autoloader": "lib/"
+        },
+        "psr-4": {
+            "Horde\\Autoloader\\": "src/"
         }
     },
     "autoload-dev": {
@@ -35,5 +38,10 @@
     },
     "config": {
         "allow-plugins": {}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-FRAMEWORK_6_0": "3.x-dev"
+        }
     }
 }
