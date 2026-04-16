@@ -150,7 +150,7 @@ class Horde_Autoloader
      */
     protected function _lower($string)
     {
-        $language = setlocale(LC_CTYPE, 0);
+        $language = setlocale(LC_CTYPE, '0');
         setlocale(LC_CTYPE, 'C');
         $string = strtolower($string);
         setlocale(LC_CTYPE, $language);
