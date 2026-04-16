@@ -77,7 +77,7 @@ class PrefixString implements ClassPathMapper
      */
     protected function _ipos(string $haystack, string $needle): int|false
     {
-        $language = setlocale(LC_CTYPE, 0);
+        $language = setlocale(LC_CTYPE, '0');
         setlocale(LC_CTYPE, 'C');
         $pos = stripos($haystack, $needle);
         setlocale(LC_CTYPE, $language);

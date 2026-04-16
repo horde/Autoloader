@@ -78,7 +78,7 @@ implements Horde_Autoloader_ClassPathMapper
      */
     protected function _ipos($haystack, $needle)
     {
-        $language = setlocale(LC_CTYPE, 0);
+        $language = setlocale(LC_CTYPE, '0');
         setlocale(LC_CTYPE, 'C');
         $pos = stripos($haystack, $needle);
         setlocale(LC_CTYPE, $language);
